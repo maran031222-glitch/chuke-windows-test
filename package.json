@@ -24,7 +24,8 @@
       "preload.js",
       "index.html",
       "package.json",
-      "node_modules/**/*"
+      "node_modules/**/*",
+      "app.js"
     ],
     "directories": {
       "output": "dist"
