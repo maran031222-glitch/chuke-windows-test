@@ -1,0 +1,1 @@
+'use strict';const {contextBridge,ipcRenderer}=require('electron');contextBridge.exposeInMainWorld('chukeDesktop',Object.freeze({minimize:()=>ipcRenderer.invoke('chuke:minimize'),maximizeToggle:()=>ipcRenderer.invoke('chuke:toggle-maximize'),close:()=>ipcRenderer.invoke('chuke:close')}));
