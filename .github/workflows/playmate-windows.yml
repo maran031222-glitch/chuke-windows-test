@@ -37,10 +37,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          $tag='playmate-windows-v0.1.0'
+          $tag='playmate-windows-v0.1.1'
           gh release view $tag *> $null
           if ($LASTEXITCODE -ne 0) {
-            gh release create $tag dist/*.exe --title '初刻陪玩 Windows 0.1.0 内测安装包' --notes '陪玩业务客户端内测版。真实业务数据由 Supabase 连接；直播间尚未完成集成，当前安装程序未代码签名。' --prerelease
+            gh release create $tag dist/*.exe --title '初刻陪玩 Windows 0.1.1 内测安装包' --notes '全新大厅视觉与陪玩业务客户端内测版。真实业务数据由 Supabase 连接；直播间尚未完成集成，当前安装程序未代码签名。' --prerelease
           } else {
             gh release upload $tag dist/*.exe --clobber
           }
