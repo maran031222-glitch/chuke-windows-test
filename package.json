@@ -1,25 +1,46 @@
 {
-  "name": "chuke-windows-preview",
-  "version": "0.28.1",
+  "name": "chuke-playmate-windows",
+  "version": "0.1.0",
   "private": true,
-  "description": "初刻 Windows 交互预览安装版（演示数据，不连接生产账号）",
+  "description": "初刻陪玩 Windows 客户端",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "dist:win": "electron-builder --win nsis --x64 --publish never"
+    "build:win": "electron-builder --win nsis --x64 --publish never"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "2.57.4"
   },
   "devDependencies": {
     "electron": "38.0.0",
     "electron-builder": "26.0.12"
   },
   "build": {
-    "appId": "com.chuke.windows.preview",
-    "productName": "初刻 Windows 预览版",
+    "appId": "com.chuke.playmate.windows",
+    "productName": "初刻陪玩",
     "asar": true,
-    "files": ["main.js", "preload.js", "src/index.html", "assets/chuke-app-icon.png", "assets/chuke-app-icon.ico", "package.json"],
-    "directories": {"output":"dist"},
-    "win": {"target": [{"target":"nsis","arch":["x64"]}], "icon": "assets/chuke-app-icon.ico","signAndEditExecutable":false},
-    "nsis": {"oneClick":false,"perMachine":false,"allowToChangeInstallationDirectory":true,"createDesktopShortcut":true,"createStartMenuShortcut":true,"runAfterFinish":true},
-    "artifactName": "Chuke-Windows-Preview-${version}-${arch}-Setup.${ext}"
+    "files": [
+      "main.js",
+      "preload.js",
+      "index.html",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": "nsis",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "runAfterFinish": true
+    },
+    "artifactName": "CHUKE-Playmate-Windows-${version}-Setup.${ext}"
   }
 }
