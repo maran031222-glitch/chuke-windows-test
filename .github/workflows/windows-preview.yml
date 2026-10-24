@@ -1,0 +1,35 @@
+name: Windows preview installer
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9f8ce9e5f1b05b6b68c2bd37b3
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.16.0'
+      - name: Prepare icon
+        shell: pwsh
+        run: python tools/prepare_assets.py
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Syntax test
+        run: |
+          node --check main.js
+          node --check preload.js
+      - name: Build NSIS
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run dist:win
+      - name: Upload EXE
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: Chuke-Windows-Preview-Installer
+          path: dist/*Setup.exe
+          if-no-files-found: error
