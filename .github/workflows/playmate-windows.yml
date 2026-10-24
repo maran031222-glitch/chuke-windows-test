@@ -1,0 +1,46 @@
+name: Build Chuke Playmate Windows
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020
+        with:
+          node-version: '22.16.0'
+      - name: Validate JavaScript
+        shell: pwsh
+        run: |
+          node --check main.js
+          node --check preload.js
+          node --check app.js
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Build Windows Setup.exe
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npm run build:win
+      - name: Upload Windows installer
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: CHUKE-Playmate-Windows-Setup
+          path: dist/*.exe
+          if-no-files-found: error
+      - name: Publish test release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag='playmate-windows-v0.1.0'
+          gh release view $tag *> $null
+          if ($LASTEXITCODE -ne 0) {
+            gh release create $tag dist/*.exe --title '初刻陪玩 Windows 0.1.0 内测安装包' --notes '陪玩业务客户端内测版。真实业务数据由 Supabase 连接；直播间尚未完成集成，当前安装程序未代码签名。' --prerelease
+          } else {
+            gh release upload $tag dist/*.exe --clobber
+          }
